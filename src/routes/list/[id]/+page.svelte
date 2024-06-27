@@ -209,8 +209,8 @@
         <!-- Study options -->
         <div class="flex gap-2 mt-2">
             <a class="btn text-sm flex items-center gap-1" href="/list/{list.id}/flashcards"><PlayingCards /> Flashcards</a>
-            <button class="btn text-sm flex items-center gap-1"><Quiz /> Quiz</button>
-            <button class="btn text-sm flex items-center gap-1"><AllMatch /> Match</button>
+            <a class="btn text-sm flex items-center gap-1" href="/list/{list.id}/quiz"><Quiz /> Quiz</a>
+            <a class="btn text-sm flex items-center gap-1" href="/list/{list.id}/match"><AllMatch /> Match</a>
         </div>
     </div>
 

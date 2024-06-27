@@ -1,6 +1,6 @@
-import { createServerClient } from '@supabase/ssr'
-import { redirect } from '@sveltejs/kit'
-import { sequence } from '@sveltejs/kit/hooks'
+import { createServerClient } from '@supabase/ssr';
+import { redirect } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
@@ -12,17 +12,19 @@ const supabase = async ({ event, resolve }) => {
      */
     event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
         cookies: {
-            get: (key) => event.cookies.get(key),
-            /**
-             * SvelteKit's cookies API requires `path` to be explicitly set in
-             * the cookie options. Setting `path` to `/` replicates previous/
-             * standard behavior.
-             */
-            set: (key, value, options) => {
-                event.cookies.set(key, value, { ...options, path: '/' })
+            getAll() {
+                return event.cookies.getAll()
             },
-            remove: (key, options) => {
-                event.cookies.delete(key, { ...options, path: '/' })
+            /**
+             * Note: You have to add the `path` variable to the
+             * set and remove method due to sveltekit's cookie API
+             * requiring this to be set, setting the path to an empty string
+             * will replicate previous/standard behavior (https://kit.svelte.dev/docs/types#public-types-cookies)
+             */
+            setAll(cookiesToSet) {
+                cookiesToSet.forEach(({ name, value, options }) =>
+                    event.cookies.set(name, value, { ...options, path: '/' })
+                );
             },
         },
     })
