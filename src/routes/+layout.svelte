@@ -10,23 +10,18 @@
     import { fly } from 'svelte/transition';
 
     export let data;
-    $: ({ session, supabase } = data);
-
-    $: svg = createAvatar(shapes, {
-        seed: session?.user?.email,
-    }).toDataUriSync();
+    $: ({ session, supabase, user } = data);
 
     onMount(() => {
         const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-            // console.log('session', session, newSession);
             if (!newSession) {
                 /**
                  * Queue this as a task so the navigation won't prevent the
                  * triggering function from completing
                  */
-                // setTimeout(() => {
-                //     goto('/', { invalidateAll: true });
-                // });
+                setTimeout(() => {
+                    goto('/', { invalidateAll: true });
+                });
             }
             if (newSession?.expires_at !== session?.expires_at) {
                 invalidate('supabase:auth');
@@ -35,6 +30,10 @@
 
         return () => data.subscription.unsubscribe();
     });
+
+    $: svg = createAvatar(shapes, {
+        seed: user?.email,
+    }).toDataUriSync();
 
     const {
         elements: { menu, item, trigger, arrow },
@@ -52,7 +51,7 @@
                 Frenlang <span class="text-sm text-gray-500 mt-1">By EduKits</span>
             </a>
             <nav class="flex items-center gap-3">
-                {#if session}
+                {#if user}
                     <a href="/builder" class="mr-4">Builder</a>
                     <a href="/learn" class="mr-4">Learn</a>
                     <button use:melt={$trigger} class="mr-4 flex items-center gap-2">
