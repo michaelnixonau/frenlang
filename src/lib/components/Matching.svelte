@@ -205,7 +205,7 @@
     </div>
 {/if}
 
-<style>
+<style lang="postcss">
     .game {
         padding: 1rem 0;
     }
@@ -237,20 +237,23 @@
     }
 
     .word.selected {
-      background-color: #ebf4ff;
-      color: #4299e1;
+        background-color: theme(colors.sky.100);
+        color: theme(colors.sky.800);
+        border-color: theme(colors.sky.300);
     }
 
     .word.correctMatch {
-      background-color: #f0fff4;
-      color: #38a169;
-      cursor: default;
+        background-color: theme(colors.lime.100);
+        color: theme(colors.lime.800);
+        border-color: theme(colors.lime.300);
+        cursor: default;
     }
 
     .word.incorrectMatch {
-      background-color: #fff5f5;
-      color: #e53e3e;
-      cursor: default;
+        background-color: theme(colors.red.100);
+        color: theme(colors.red.800);
+        border-color: theme(colors.red.300);
+        cursor: default;
     }
 
     .word.fading {
