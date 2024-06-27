@@ -1,7 +1,12 @@
 /** @type { import("eslint").Linter.Config } */
 module.exports = {
 	root: true,
-	extends: ['eslint:recommended', 'plugin:svelte/recommended', 'prettier'],
+	extends: [
+        "eslint:recommended",
+        "plugin:svelte/recommended",
+        "prettier",
+        "plugin:storybook/recommended"
+    ],
 	parserOptions: {
 		sourceType: 'module',
 		ecmaVersion: 2020,
