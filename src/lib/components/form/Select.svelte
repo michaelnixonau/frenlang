@@ -105,7 +105,7 @@
     {/if}
 </div>
 
-<style lnag="postcss">
+<style lang="postcss">
     .check {
         position: absolute;
         left: theme(spacing.2);
