@@ -1,8 +1,10 @@
 <script>
-    import {supabase} from '$lib/supabaseClient.js';
     import {page} from '$app/stores';
     import { goto } from '$app/navigation';
     import Logo from '../../img/Logomark.png';
+
+    export let data;
+    $: ({ supabase } = data);
 
     let email = '';
     let errorMessage = '';
