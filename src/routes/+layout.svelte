@@ -2,10 +2,13 @@
 	import '../app.pcss';
     import { goto, invalidate } from '$app/navigation';
     import { onMount } from 'svelte';
+    import { page } from '$app/stores';
     import { createAvatar } from '@dicebear/core';
     import { shapes } from '@dicebear/collection';
     import Logo from '../img/Logomark.png';
     import Toaster from '$lib/components/Toaster.svelte';
+    import Handyman from '~icons/material-symbols/handyman-outline';
+    import Library from '~icons/material-symbols/local-library-outline';
     import { createDropdownMenu, melt } from '@melt-ui/svelte';
     import { fly } from 'svelte/transition';
 
@@ -39,24 +42,39 @@
         elements: { menu, item, trigger, arrow },
         states: { open },
     } = createDropdownMenu();
+
+    const menuItems = [
+        { href: '/builder', icon: Handyman, text: 'Builder' },
+        { href: '/learn', icon: Library, text: 'Learn' },
+    ];
+
+    $: isCurrentPage = (href) => $page.url.pathname.startsWith(href);
+    $: isSubPage = (href) => $page.url.pathname.startsWith(href) && $page.url.pathname !== href;
 </script>
 
 <svelte:document class="h-full bg-white" />
 
 <div class="flex flex-col min-h-screen">
-    <header class="p-4 border-b">
+    <header class="px-4 border-b">
         <div class="container mx-auto flex justify-between items-center">
             <a href="/" class="font-semibold text-xl flex items-center gap-1">
                 <img src={Logo} alt="EduKits French" class="h-8 w-8 inline-block" />
-                Frenlang <span class="text-sm text-gray-500 mt-1">By EduKits</span>
+                Frenlang <span class="text-sm text-gray-500 mt-1 hidden md:block">By EduKits</span>
             </a>
             <nav class="flex items-center gap-3">
                 {#if user}
-                    <a href="/builder" class="mr-4">Builder</a>
-                    <a href="/learn" class="mr-4">Learn</a>
+                    {#each menuItems as { href, icon, text }}
+                        <a
+                                href={href}
+                                class="py-4 mr-4 flex items-center gap-2 border-b-2 {isCurrentPage(href) ? isSubPage(href) ? 'border-slate-700' : 'border-sky-500 font-semibold text-sky-900' : 'border-transparent'}"
+                        >
+                            <svelte:component this={icon} />
+                            <span class="hidden md:inline">{text}</span>
+                        </a>
+                    {/each}
                     <button use:melt={$trigger} class="mr-4 flex items-center gap-2">
                         <img src={svg} alt="Avatar" class="h-7 w-7 rounded-full inline-block" />
-                        My Account
+                        <span class="hidden md:inline">My Account</span>
                     </button>
                     {#if $open}
                         <div
