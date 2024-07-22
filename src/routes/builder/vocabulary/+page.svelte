@@ -9,6 +9,8 @@
     import {writable} from "svelte/store";
     import {goto, invalidateAll} from '$app/navigation';
     import {wordTypes} from '$lib/french.js';
+    import ArrowDown from '~icons/material-symbols/keyboard-arrow-down';
+    import ArrowUp from '~icons/material-symbols/keyboard-arrow-up';
 
     export let data;
     $: ({ vocabulary, vocabSize, page, pageSize, orderBy, orderDir, wordType } = data);
@@ -139,7 +141,7 @@
                 ...Object.entries(wordTypes).map(([value, label]) => ({ value, label })),
             ]}
             bind:value={wordType}
-            on:change={() => goto(`?${buildQuery({ ...$queryParams, wordType })}`)}
+            on:change={() => goto(`?${buildQuery({ ...$queryParams, wordType, page: 1 })}`)}
     />
 </div>
 
@@ -158,9 +160,9 @@
                             >
                                 <Render of={cell.render()} />
                                 {#if props.sort.order === 'asc'}
-                                    ⬇️
+                                    <ArrowDown class="inline" />
                                 {:else if props.sort.order === 'desc'}
-                                    ⬆️
+                                    <ArrowUp class="inline" />
                                 {/if}
                             </th>
                         </Subscribe>
@@ -177,7 +179,7 @@
                 <tr {...rowAttrs} class="bg-white border-b">
                     {#each row.cells as cell (cell.id)}
                         <Subscribe attrs={cell.attrs()} let:attrs>
-                            <td {...attrs} class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            <td {...attrs} class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
                                 <Render of={cell.render()} />
                             </td>
                         </Subscribe>
@@ -187,7 +189,7 @@
                             <span class="bg-sky-100 text-sky-600 px-2 py-1 rounded-full text-xs mr-1">{topic}</span>
                         {/each}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="px-6 py-2 whitespace-nowrap text-right text-sm font-medium">
                         <a href="/builder/vocabulary/{row.dataId}/edit" class="text-sky-600 mr-2 hover:underline">Edit</a>
                         <button on:click={() => deleteVocabulary(row.dataId)} class="text-red-600 hover:underline">Delete</button>
                     </td>

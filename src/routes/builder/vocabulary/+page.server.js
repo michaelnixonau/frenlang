@@ -1,7 +1,7 @@
 export const load = async ({ locals: { supabase }, url }) => {
     // Get query parameters
     const page = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('pageSize')) || 10;
+    const pageSize = Number(url.searchParams.get('pageSize')) || 20;
     const orderBy = url.searchParams.get('orderBy') || 'id';
     const orderDir = url.searchParams.get('orderDir') || 'asc';
     const wordType = url.searchParams.get('wordType') || '';
