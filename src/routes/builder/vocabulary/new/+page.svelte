@@ -1,7 +1,8 @@
 <script>
     import EditVocab from '$lib/components/EditVocab.svelte';
     import {goto} from "$app/navigation";
-    import {masculineArticles, feminineArticles, pluralArticles} from '$lib/french.js';
+    import {removeArticleFr} from '$lib/french.js';
+    import {removeArticleEn} from '$lib/english.js';
     import {addToast} from '$lib/components/Toaster.svelte';
 
     /** @type boolean */
@@ -22,31 +23,11 @@
     /** @type string */
     let pluralForm = '';
 
-    /** @type {any} */
+    /** @type {any[]} */
     let topics;
 
     /** @type {() => void} */
     let reset;
-
-    /**
-     * Remove any articles from the word (French).
-     * @param {string} str
-     * @returns {string}
-     */
-    function removeArticleFr(str) {
-        const words = str.split(' ');
-        const firstWord = words[0].toLowerCase();
-
-        if (
-            masculineArticles.includes(firstWord)
-            || feminineArticles.includes(firstWord)
-            || pluralArticles.includes(firstWord)
-        ) {
-            words.shift();
-        }
-
-        return words.join(' ');
-    }
 
     async function add() {
         if (loading) {
@@ -54,12 +35,13 @@
         }
         loading = true;
         try {
-            const wordToAdd = removeArticleFr(word);
+            const cleanWord = removeArticleFr(word).trim();
+            const cleanTranslation = removeArticleEn(translation).trim();
             const body = JSON.stringify({
                 word_type: wordType,
-                word: wordToAdd,
-                translation,
-                plural_form: wordType === 'noun' ? removeArticleFr(pluralForm) : undefined,
+                word: cleanWord,
+                translation: cleanTranslation,
+                plural_form: wordType === 'noun' ? removeArticleFr(pluralForm).trim() : undefined,
                 gender: wordType === 'noun' ? gender : undefined,
                 topic_ids: topics.map(t => t.id),
             });
@@ -76,7 +58,7 @@
             reset();
             addToast({ data: {
                 title: 'Success',
-                description: `Added "${wordToAdd}" to vocabulary.`,
+                description: `Added "${cleanWord}" to vocabulary.`,
                 type: 'success',
             }});
         } catch(e) {
